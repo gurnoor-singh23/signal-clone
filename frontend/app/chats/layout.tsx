@@ -41,7 +41,7 @@ export default async function ChatsLayout({ children }: { children: React.ReactN
                 key={c.id}
                 name={c.name}
                 lastMessage={c.last_message || "No messages yet"}
-                time={new Date(c.last_message_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                time={new Date(c.last_message_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                 href={`/chats/${c.id}`}
               />
             ))
