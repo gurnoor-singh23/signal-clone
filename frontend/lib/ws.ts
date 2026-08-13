@@ -3,7 +3,8 @@ let listeners: ((data: any) => void)[] = [];
 
 export function connectWS(token: string) {
   if (socket && socket.readyState === WebSocket.OPEN) return socket;
-  socket = new WebSocket(`ws://127.0.0.1:8000/ws?token=${token}`);
+  const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://127.0.0.1:8000";
+socket = new WebSocket(`${WS_URL}/ws?token=${token}`);
   socket.onmessage = (e) => {
     const data = JSON.parse(e.data);
     listeners.forEach((cb) => cb(data));

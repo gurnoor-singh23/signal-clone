@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ConversationListItem from "@/components/ConversationListItem";
@@ -44,6 +46,9 @@ const [showNewGroup, setShowNewGroup] = useState(false);
     >
       <UsersRound size={18} />
     </button>
+<Link href="/settings" className="p-2 rounded-full hover:bg-signal-dark/50">
+  <Settings size={18} />
+</Link>
     <ThemeToggle />
   </div>
 </div>
