@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import ChatRoom from "@/components/ChatRoom";
-import { apiGet } from "@/lib/api";
+import { apiGet, getCurrentUser } from "@/lib/api";
+import { useParams } from "next/navigation";
 
 type Message = {
   id: number;
@@ -10,23 +14,29 @@ type Message = {
   status: string;
 };
 
-const CURRENT_USER_ID = 2; // Priya's user_id — temporary, replace once real login exists
+export default function ChatPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const currentUser = getCurrentUser();
 
-export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+  useEffect(() => {
+    apiGet(`/conversations/${id}/messages`)
+      .then(setMessages)
+      .catch((e) => console.error("Failed to load messages", e))
+      .finally(() => setLoaded(true));
+  }, [id]);
 
-  let messages: Message[] = [];
-  try {
-    messages = await apiGet(`/conversations/${id}/messages`);
-  } catch (e) {
-    console.error("Failed to load messages", e);
+  if (!loaded) {
+    return <div className="flex-1 flex items-center justify-center text-zinc-500">Loading...</div>;
   }
 
   return (
     <ChatRoom
       conversationId={Number(id)}
       initialMessages={messages}
-      currentUserId={CURRENT_USER_ID}
+      currentUserId={currentUser?.id}
       chatName={`Conversation #${id}`}
     />
   );

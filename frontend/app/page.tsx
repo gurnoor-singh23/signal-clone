@@ -6,10 +6,10 @@ export default function Home() {
       <div className="text-center">
         <h1 className="text-2xl font-semibold mb-4">Signal Clone</h1>
         <Link
-          href="/chats"
+          href="/login"
           className="inline-block rounded-full bg-signal-blue px-6 py-3 text-white font-medium"
         >
-          Enter App
+          Get Started
         </Link>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import MessageBubble from "./MessageBubble";
 import { connectWS, onWSMessage, sendWS } from "@/lib/ws";
-import { TEMP_TOKEN } from "@/lib/api";
+import { getToken } from "@/lib/api";
 
 type Message = {
   id: number;
@@ -31,7 +31,8 @@ export default function ChatRoom({
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    connectWS(TEMP_TOKEN);
+    const token = getToken();
+  if (token) connectWS(token);
     const unsubscribe = onWSMessage((data) => {
   if (data.type === "message" && data.conversation_id === conversationId) {
     setMessages((prev) => {
@@ -66,9 +67,9 @@ export default function ChatRoom({
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-full min-h-0">
       <ChatHeader name={chatName} status="online" />
-      <div className="flex-1 overflow-y-auto py-4">
+      <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-0.5 min-h-0">
         {messages.length === 0 ? (
           <div className="text-center text-zinc-500 mt-8">No messages yet</div>
         ) : (

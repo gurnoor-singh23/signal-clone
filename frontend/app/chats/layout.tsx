@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ConversationListItem from "@/components/ConversationListItem";
-import { apiGet } from "@/lib/api";
+import { apiGet, getToken, getCurrentUser } from "@/lib/api";
 
 type Conversation = {
   id: number;
@@ -9,13 +13,19 @@ type Conversation = {
   last_message_at: string;
 };
 
-export default async function ChatsLayout({ children }: { children: React.ReactNode }) {
-  let conversations: Conversation[] = [];
-  try {
-    conversations = await apiGet("/conversations");
-  } catch (e) {
-    console.error("Failed to load conversations", e);
-  }
+export default function ChatsLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+
+  useEffect(() => {
+    if (!getToken()) {
+      router.push("/login");
+      return;
+    }
+    apiGet("/conversations")
+      .then(setConversations)
+      .catch((e) => console.error("Failed to load conversations", e));
+  }, [router]);
 
   return (
     <div className="flex h-screen bg-background text-foreground">
@@ -32,9 +42,7 @@ export default async function ChatsLayout({ children }: { children: React.ReactN
         </div>
         <div className="flex-1 overflow-y-auto">
           {conversations.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500">
-              No conversations yet
-            </div>
+            <div className="px-4 py-8 text-center text-sm text-zinc-500">No conversations yet</div>
           ) : (
             conversations.map((c) => (
               <ConversationListItem
@@ -48,8 +56,7 @@ export default async function ChatsLayout({ children }: { children: React.ReactN
           )}
         </div>
       </div>
-
-      <div className="flex-1 flex flex-col">{children}</div>
+      <div className="flex-1 flex flex-col min-h-0">{children}</div>
     </div>
   );
 }
