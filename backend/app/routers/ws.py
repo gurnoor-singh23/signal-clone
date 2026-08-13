@@ -64,6 +64,7 @@ async def handle_event(event: dict, user_id: int, db):
         conv.last_message_at = datetime.utcnow()
         db.commit()
 
+
         payload = {
             "type": "message",
             "id": msg.id,

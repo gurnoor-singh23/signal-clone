@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import ConversationListItem from "@/components/ConversationListItem";
 import { apiGet, getToken, getCurrentUser } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
+import NewGroupModal from "@/components/NewGroupModal";
+import { UsersRound } from "lucide-react";
 
 type Conversation = {
   id: number;
@@ -16,7 +18,8 @@ type Conversation = {
 
 export default function ChatsLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]); 
+const [showNewGroup, setShowNewGroup] = useState(false);
 
   useEffect(() => {
     if (!getToken()) {
@@ -33,7 +36,16 @@ export default function ChatsLayout({ children }: { children: React.ReactNode })
       <div className="w-[380px] border-r border-signal-border flex flex-col bg-signal-panel">
         <div className="p-4 border-b border-signal-border flex items-center justify-between">
   <h1 className="text-xl font-semibold">Chats</h1>
-  <ThemeToggle />
+  <div className="flex items-center gap-1">
+    <button
+      onClick={() => setShowNewGroup(true)}
+      className="p-2 rounded-full hover:bg-signal-dark/50"
+      aria-label="New group"
+    >
+      <UsersRound size={18} />
+    </button>
+    <ThemeToggle />
+  </div>
 </div>
         <div className="p-3">
           <input
@@ -59,6 +71,15 @@ export default function ChatsLayout({ children }: { children: React.ReactNode })
         </div>
       </div>
       <div className="flex-1 flex flex-col min-h-0">{children}</div>
+{showNewGroup && (
+        <NewGroupModal
+          onClose={() => setShowNewGroup(false)}
+          onCreated={() => {
+            setShowNewGroup(false);
+            apiGet("/conversations").then(setConversations);
+          }}
+        />
+      )}
     </div>
   );
 }
