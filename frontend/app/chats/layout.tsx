@@ -1,13 +1,22 @@
 import ConversationListItem from "@/components/ConversationListItem";
+import { apiGet } from "@/lib/api";
 
-const fakeConversations = [
-  { name: "Priya Singh", lastMessage: "Good! Working on the assignment", time: "2:14 PM", unread: 2 },
-  { name: "Rohan Gupta", lastMessage: "See you tomorrow!", time: "1:02 PM" },
-  { name: "Project Squad", lastMessage: "Sneha: sounds good", time: "11:45 AM", unread: 5 },
-  { name: "Vikram Rao", lastMessage: "Thanks a lot 🙌", time: "Yesterday" },
-];
+type Conversation = {
+  id: number;
+  type: string;
+  name: string;
+  last_message: string | null;
+  last_message_at: string;
+};
 
-export default function ChatsLayout({ children }: { children: React.ReactNode }) {
+export default async function ChatsLayout({ children }: { children: React.ReactNode }) {
+  let conversations: Conversation[] = [];
+  try {
+    conversations = await apiGet("/conversations");
+  } catch (e) {
+    console.error("Failed to load conversations", e);
+  }
+
   return (
     <div className="flex h-screen bg-background text-foreground">
       <div className="w-[380px] border-r border-signal-border flex flex-col bg-signal-panel">
@@ -22,9 +31,21 @@ export default function ChatsLayout({ children }: { children: React.ReactNode })
           />
         </div>
         <div className="flex-1 overflow-y-auto">
-          {fakeConversations.map((c) => (
-            <ConversationListItem key={c.name} {...c} />
-          ))}
+          {conversations.length === 0 ? (
+            <div className="px-4 py-8 text-center text-sm text-zinc-500">
+              No conversations yet
+            </div>
+          ) : (
+            conversations.map((c) => (
+              <ConversationListItem
+                key={c.id}
+                name={c.name}
+                lastMessage={c.last_message || "No messages yet"}
+                time={new Date(c.last_message_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                href={`/chats/${c.id}`}
+              />
+            ))
+          )}
         </div>
       </div>
 
