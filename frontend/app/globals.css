@@ -11,6 +11,15 @@
   --color-signal-border: #2a2a2e;
 }
 
+:root.light {
+  --background: #ffffff;
+  --foreground: #0f0f11;
+  --color-signal-dark: #f0f0f2;
+  --color-signal-panel: #f7f7f8;
+  --color-signal-bubble-in: #e9e9eb;
+  --color-signal-border: #e0e0e2;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

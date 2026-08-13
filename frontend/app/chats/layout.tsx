@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ConversationListItem from "@/components/ConversationListItem";
 import { apiGet, getToken, getCurrentUser } from "@/lib/api";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type Conversation = {
   id: number;
@@ -31,8 +32,9 @@ export default function ChatsLayout({ children }: { children: React.ReactNode })
     <div className="flex h-screen bg-background text-foreground">
       <div className="w-[380px] border-r border-signal-border flex flex-col bg-signal-panel">
         <div className="p-4 border-b border-signal-border flex items-center justify-between">
-          <h1 className="text-xl font-semibold">Chats</h1>
-        </div>
+  <h1 className="text-xl font-semibold">Chats</h1>
+  <ThemeToggle />
+</div>
         <div className="p-3">
           <input
             type="text"
