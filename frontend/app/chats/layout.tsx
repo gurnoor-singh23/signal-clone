@@ -1,7 +1,15 @@
+import ConversationListItem from "@/components/ConversationListItem";
+
+const fakeConversations = [
+  { name: "Priya Singh", lastMessage: "Good! Working on the assignment", time: "2:14 PM", unread: 2 },
+  { name: "Rohan Gupta", lastMessage: "See you tomorrow!", time: "1:02 PM" },
+  { name: "Project Squad", lastMessage: "Sneha: sounds good", time: "11:45 AM", unread: 5 },
+  { name: "Vikram Rao", lastMessage: "Thanks a lot 🙌", time: "Yesterday" },
+];
+
 export default function ChatsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen bg-background text-foreground">
-      {/* Left pane - conversation list */}
       <div className="w-[380px] border-r border-signal-border flex flex-col bg-signal-panel">
         <div className="p-4 border-b border-signal-border flex items-center justify-between">
           <h1 className="text-xl font-semibold">Chats</h1>
@@ -14,17 +22,13 @@ export default function ChatsLayout({ children }: { children: React.ReactNode })
           />
         </div>
         <div className="flex-1 overflow-y-auto">
-          {/* Conversation list items will go here */}
-          <div className="px-4 py-8 text-center text-sm text-zinc-500">
-            No conversations yet
-          </div>
+          {fakeConversations.map((c) => (
+            <ConversationListItem key={c.name} {...c} />
+          ))}
         </div>
       </div>
 
-      {/* Right pane - active chat */}
-      <div className="flex-1 flex flex-col">
-        {children}
-      </div>
+      <div className="flex-1 flex flex-col">{children}</div>
     </div>
   );
 }
