@@ -68,3 +68,8 @@ WS /ws?token=... -> real-time channel (message / typing / read events)
 - Online/last-seen status is approximated from active WebSocket connections, not persisted presence tracking.
 - Voice/video calls, Stories, and Linked Devices are placeholder "Coming Soon" screens, as permitted by the brief.
 - New Group member selection is currently a fixed list of seeded users rather than a live user search, due to time constraints.
+- On the deployed backend, seed data is triggered via a one-time `POST /admin/seed` endpoint (since Render's free tier doesn't provide shell access) — this has already been run and the deployed database is populated with the same 5 seeded users as local dev.
+
+## Demo
+- Live: https://signal-clone-mauve.vercel.app
+- Repo: https://github.com/gurnoor-singh23/signal-clone
