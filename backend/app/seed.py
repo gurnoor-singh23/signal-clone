@@ -2,6 +2,7 @@ from .database import SessionLocal, Base, engine
 from . import models
 from datetime import datetime, timedelta
 
+
 def run_seed():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -56,8 +57,9 @@ def run_seed():
             db.add(models.ConversationMember(conversation_id=g1.id, user_id=u.id, role=role))
         db.commit()
 
+    result = [(u.id, u.display_name) for u in users]
     db.close()
-    return [(u.id, u.display_name) for u in users]
+    return result
 
 
 if __name__ == "__main__":
