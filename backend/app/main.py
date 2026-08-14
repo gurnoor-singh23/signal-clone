@@ -7,6 +7,12 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+@app.post("/admin/seed")
+def trigger_seed():
+    from .seed import run_seed
+    result = run_seed()
+    return {"message": "Seed executed", "users": result}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
